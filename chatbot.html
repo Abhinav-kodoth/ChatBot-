@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ChatBot</title>
+
+    <style>
+     
+      .send-button {
+        background-color: rgb(25,135,84);
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .chat-input{
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+
+        flex-grow: 1;
+
+      }
+
+      .chat-input-container{
+        display: flex;
+        margin-bottom: 60px;
+
+      }
+
+      .app-container{
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message-user{
+        display: flex;
+        justify-content: end;
+        align-items: start;
+      }
+
+      .chat-user-text{
+         background-color: rgb(238,238,238);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        margin-top: 2px;
+        max-width: 300px;
+        color:  rgb(25,135,84);
+      }
+
+      .chat-message-robot{
+        display: flex;
+        justify-content: start;
+        align-items: start;
+      }
+
+      .chat-robot-text{
+        background-color: rgb(238,238,238);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        margin-top: 2px;
+        max-width: 300px;
+        color:  rgb(25,135,84);
+      }
+
+      .chat-profile{
+        width: 45px;
+      }
+
+      .chat-messages-container{
+        flex-grow:1;
+        margin-top: 20px;
+        overflow: scroll;
+        scrollbar-width: none;
+      }
+
+      .chat-initial-container{
+        flex-grow:1;
+        margin-top: 20px;
+        overflow: scroll;
+        scrollbar-width: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .initial-text{
+        color: rgb(25,135,84);
+        text-align: center;
+        margin-top: 300px;
+        justify-content: center;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-weight: bolder;
+        
+      }
+
+      /* 🔥 Animated Background Lines — ADDED ONLY, NO CHANGES TO OTHER CSS */
+
+        * {
+          box-sizing: border-box !important;
+        }
+
+        html, body {
+          height: 100%;
+        }
+
+        body {
+          background-color: #111;
+          color: #f2f2f2;
+          font-family: sans-serif;
+          position: relative;
+          overflow: hidden; /* required for animation */
+        }
+
+        /* Background lines container */
+        .lines {
+          position: fixed;       /* stays behind content */
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 100vh;
+          width: 90vw;
+          margin: auto;
+          display: flex;
+          justify-content: space-between;
+          z-index: -1;           /* keeps lines behind everything */
+        }
+
+        /* Each vertical line */
+        .line {
+          width: 1px;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+        }
+
+        /* Falling glowing bar */
+        .line::after {
+          content: '';
+          position: absolute;
+          height: 15vh;
+          width: 100%;
+          top: -50%;
+          left: 0;
+          background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+          animation: drop 7s infinite;
+          animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+        }
+
+        /* Colors for each line */
+        .line:nth-child(1)::after { background: linear-gradient(to bottom, transparent, #FF4500); animation-delay: .5s; }
+        .line:nth-child(2)::after { background: linear-gradient(to bottom, transparent, #32CD32); animation-delay: 1s; }
+        .line:nth-child(3)::after { background: linear-gradient(to bottom, transparent, #1E90FF); animation-delay: 1.5s; }
+        .line:nth-child(4)::after { background: linear-gradient(to bottom, transparent, #FFD700); animation-delay: 2s; }
+        .line:nth-child(5)::after { background: linear-gradient(to bottom, transparent, #8A2BE2); animation-delay: 2.5s; }
+        .line:nth-child(6)::after { background: linear-gradient(to bottom, transparent, #20B2AA); animation-delay: 3s; }
+        .line:nth-child(7)::after { background: linear-gradient(to bottom, transparent, #DC143C); animation-delay: 3.5s; }
+        .line:nth-child(8)::after { background: linear-gradient(to bottom, transparent, #00FA9A); animation-delay: 4s; }
+        .line:nth-child(9)::after { background: linear-gradient(to bottom, transparent, #FF1493); animation-delay: 4.5s; }
+        .line:nth-child(10)::after { background: linear-gradient(to bottom, transparent, #00BFFF); animation-delay: 5s; }
+
+        @keyframes drop {
+          0% { top: -50%; }
+          100% { top: 110%; }
+        }
+
+
+      
+    </style>
+  </head>
+  <body>
+
+        <div class="lines">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+    <div class="js-container"></div>
+
+    
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+      function ChatInput({chatMessages,setChatMessages}){
+
+        const [inputText,setInputText]=React.useState('');
+        function saveInputText(event){
+          setInputText(event.target.value);
+        }
+
+        function sendMessage(){
+              const newChatMessages=[
+              ...chatMessages,
+              {
+                message: inputText,
+                sender:'user',
+                id:crypto.randomUUID()
+              }
+            ];
+
+            setChatMessages(newChatMessages);
+
+            const response=Chatbot.getResponse(inputText);
+
+             setChatMessages([
+              ...newChatMessages,
+              {
+                message: response,
+                sender:'robot',
+                id:crypto.randomUUID()
+              }
+            ]);
+
+
+            setInputText('');
+        }
+        return (
+
+          <div className="chat-input-container">
+            <input 
+              placeholder="Send a message to chatBot" 
+              size="30"
+              onChange={saveInputText}
+              value={inputText}
+              className="chat-input"
+            />
+            <button
+            onClick={sendMessage}
+            className="send-button">
+            Send</button>
+          </div>
+
+        );
+      }
+
+      function ChatMessage({message,sender}){
+        /*const message=props.message;
+        const sender=props.sender;*/
+
+
+
+        if(sender==='robot'){
+          return(
+            <div className="chat-message-robot">
+              
+              <img src="robot.png" className="chat-profile"/>
+                <div
+                className="chat-robot-text">
+                  {message} 
+                </div>
+            </div>
+          );
+        }
+
+        return(
+          <div className="chat-message-user">
+            <div
+                className="chat-user-text">
+                  {message} 
+                </div>
+            <img src="user.png" className="chat-profile" />
+          </div>
+        );
+      }
+
+      function ChatMessages({chatMessages}){
+
+        const chatMessagesRef=React.useRef(null);
+        React.useEffect(()=>{
+          const containerElem=chatMessagesRef.current
+          if(containerElem){
+            containerElem.scrollTop=containerElem.scrollHeight
+          }
+        },
+           [chatMessages]
+        );
+
+
+         if(chatMessages.length==0)
+            return(
+            <div className="chat-initial-container">
+              <p className="initial-text">What's on your mind today?</p>
+            </div>
+          )
+
+
+          return(
+            <div className="chat-messages-container"
+            ref={chatMessagesRef}>
+          {chatMessages.map((chatMessage)=>{
+                          return(
+                            <ChatMessage 
+                            message={chatMessage.message}
+                            sender={chatMessage.sender}
+                            key={chatMessage.id}
+                            />
+                          );
+                        })
+                      
+                      }
+            </div>
+
+          );
+
+
+      }
+
+     
+
+
+      function App(){
+        const [chatMessages,setChatMessages]=React.useState([
+            // {
+            //   message:'hello chatbot',
+            //   sender:'user',
+            //   id: 'id1'
+            // },{
+            //   message:'Hello! How can I help you?',
+            //   sender:'robot',
+            //   id: 'id2'
+            // }
+          ]
+        );
+         
+          /*const chatMessages=array[0];
+          const setChatMessages=array[1];*/
+        
+        
+        
+        return (
+          <div className="app-container">
+          
+         
+
+          <ChatMessages 
+          chatMessages={chatMessages}
+          />
+
+            <ChatInput 
+            chatMessages={chatMessages}
+            setChatMessages={setChatMessages}
+          ></ChatInput>
+
+          
+
+         
+          </div>
+          );
+
+          
+      }
+
+    
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html> 
